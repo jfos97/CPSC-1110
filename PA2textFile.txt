@@ -1,0 +1,174 @@
+/*
+	James Foster
+	3/25/18
+
+	Program will input a text file and analyse it to find
+	different variables such are how many times each
+	letter is used and length of each word.
+
+	5 hours
+	took ~5 hours
+*/
+
+	#include <stdio.h>
+	#include <stdlib.h>
+
+	void printIntro();
+	int processWord(char word[], int letter[], int length[]);
+	void printLetter(int letter[]);
+	void lengthOccurence(int length[]);
+	void commonLetter(int letter[]);
+	void avgLength(int total, int numLetters);
+	void commonLength(int length[]);
+
+
+int main (void) {
+	//initialize variables and arrays
+	int letter[26], length[13], i, total=0, numLetters=0;
+	char word[50];
+	for(i=0; i<26; i++){
+		letter[i]=0;
+	}
+	for(i=0; i<13; i++) {
+		length[i]=0;
+	}
+	
+	//call functions
+	printIntro();
+	while (scanf("%s", word) == 1) {
+		numLetters = processWord(word, letter, length)+ numLetters;	
+		total=total+1;
+	}
+	printLetter(letter);
+	lengthOccurence(length);
+	commonLetter(letter);
+	fprintf(stdout, "Total number of words: %d\n", total);
+	avgLength(total, numLetters);
+	commonLength(length);
+	
+return(0);
+}
+
+
+
+void printIntro() {
+
+	fprintf(stdout, "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =\n");
+	fprintf(stdout, "=  This program reads in text, counting the occurrences   =\n");
+	fprintf(stdout, "= of each letter and the number of words of each length.  =\n");
+	fprintf(stdout, "=   Additionally, the 5 most and 5 least common letters   =\n");
+ 	fprintf(stdout, "=      are listed along with the total word count, the    =\n");
+	fprintf(stdout, "=         average and the most common word lenght.        =\n");
+	fprintf(stdout, "= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =\n\n");
+	
+}
+
+int processWord(char word[], int letter[], int length[]) {
+
+	int count=0, i, c;
+	int numLetters=0;
+
+	for(i=0; word[i]!='\0'; i++) {
+		c=word[i];
+		if ((c>='A')&&(c<='Z')) letter[c-'A']++;
+		else if((c>='a')&&(c<='z')) letter[c - 'a']++;
+
+		numLetters=numLetters+1;
+		count=count+1;
+	}
+	if(count>12) {
+		length[0]=length[0]+1;
+	}
+	else{
+		length[count]=length[count]+1;
+	}
+return(numLetters);
+}
+
+void printLetter(int letter[]) {
+
+	int i;
+	
+	fprintf(stdout, "Occurences of each letter:\n");
+	for(i=0; i<26; i++){
+		fprintf(stdout, "%c: %i\n", 65+i, letter[i]);
+	}
+	fprintf(stdout, "\n");
+}
+
+void lengthOccurence(int length[]) {
+
+	int i;
+
+	fprintf(stdout, "Occurences of word length:\n");
+	for(i=1; i<13;i++) {
+		fprintf(stdout, "%d: %i\n", i, length[i]);
+	}
+	fprintf(stdout, ">12: %i", length[0]);
+	fprintf(stdout, "\n\n");
+}
+
+void commonLetter(int letter[]){
+
+	int i, temp, min, j, alph[26], temp2;
+
+	for(i=0; i<26; i++) {
+		alph[i]=65+i;
+	}
+
+	for(i=0; i<26; i++){
+		min=i;
+		for(j=i+1; j<26; ++j) {
+			if(letter[j]<letter[min]) {
+				min=j;
+			}
+		}
+	temp = letter[i];
+	temp2= alph[i];
+	letter[i] = letter[min];
+	alph[i] = alph[min];
+	letter[min] = temp;
+	alph[min] = temp2;
+	}
+
+	j=1;
+	fprintf(stdout, "Most common letters: ");
+	for(i=25; i>20; i--){
+		fprintf(stdout, "#%d: %c  ", j, alph[i]);
+		j=j+1;
+	}
+	fprintf(stdout, "\n");
+	fprintf(stdout, "Least common letters: ");
+	for(i=0; i<5; i++){
+		fprintf(stdout, "#%d: %c  ", i+1, alph[i]);
+	}
+	fprintf(stdout, "\n\n");
+}
+
+void avgLength(int total, int numLetters){
+
+	float avg;
+
+	avg=(float)numLetters/total;
+	
+	fprintf(stdout, "Average word length: %.2f\n", avg);
+}
+
+void commonLength(int length[]) {
+
+	int i, c, max=0;	
+
+	for(i=1; i<13; i++){
+		if(length[i]>max) {
+			max=length[i];
+			c=i;
+		}
+	}
+	if(length[0]>max){
+		fprintf(stdout, "Most common word length: >12 characters");
+	}	
+	else{
+		fprintf(stdout, "Most common word length: %d character", c);
+	}
+	fprintf(stdout, "\n");
+}

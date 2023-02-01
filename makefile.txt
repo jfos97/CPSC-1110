@@ -1,0 +1,11 @@
+lab11: mainDriver.c initializeArray.c printArray.c computeAvgs.c sortValues.c defs.h
+
+	gcc -Wall -o lab11 mainDriver.c initializeArray.c printArray.c \
+	computeAvgs.c sortValues.c
+ 
+run: lab11
+	./lab11
+
+clean:
+	rm lab11
+	
